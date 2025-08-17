@@ -1,0 +1,13 @@
+services:
+  agent:
+    image: python:3.11-slim
+    container_name: west
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: bash -c "ln -s /usr/local/bin/python /usr/bin/python3 && /app/venv/bin/python src/agent.py dev"
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
