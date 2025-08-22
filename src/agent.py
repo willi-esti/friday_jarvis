@@ -4,8 +4,9 @@ from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions
 from livekit.plugins import (
     noise_cancellation,
+    silero,
 )
-from livekit.plugins import google
+from livekit.plugins import openai
 from prompts.prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 from tools.get_weather import get_weather
 from tools.search_web import search_web
@@ -17,10 +18,18 @@ class Assistant(Agent):
     def __init__(self) -> None:
         super().__init__(
             instructions=AGENT_INSTRUCTION,
-            llm=google.beta.realtime.RealtimeModel(
-            voice="Aoede",
-            temperature=0.8,
-        ),
+            llm=openai.LLM(
+                model="gpt-5-nano",
+                #temperature=0.8,
+            ),
+            tts=openai.TTS(
+                model="gpt-4o-mini-tts",
+                voice="onyx",
+            ),
+            stt=openai.STT(
+                model="gpt-4o-mini-transcribe"
+            ),
+            vad=silero.VAD.load(),
             tools=[
                 get_weather,
                 search_web,
